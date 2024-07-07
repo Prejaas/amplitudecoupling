@@ -52,7 +52,7 @@ N = T/h + max(ceil(tau/h) + ceil(tau_c)); %number of samples
 % initialization of some state variables
 X = zeros(10,NN,N); % initialization of state vector
 phi_delay = zeros(1,NN);
-phi_delay_sum = zeros(1,NN);
+% phi_delay_sum = zeros(1,NN);
 index = 6; % noise index
 
 
@@ -65,12 +65,15 @@ for n=tau/h + ceil(tau_c) + 1:N % loop over time n
         for k = 1:size(sc_matrix,2)
             if k~=f
                 delay = delay_matrix(k,f);
-                phi_delay(k) = X(9,k,n-ceil(delay)) .* sc_matrix(k,f);
+                phi_delay(k,f) = X(9,k,n-ceil(delay)) .* sc_matrix(k,f);
+%                 phi_delay(k) = X(9,k,n-ceil(delay)) .* sc_matrix(k,f);
+
             end
         end
-        phi_delay_sum(f) = mean(phi_delay);
+%         phi_delay_sum(f) = mean(phi_delay);
      end
-
+     phi_delay_sum = mean(phi_delay);
+     
      % noise in the model
      noise = zeros(10,NN);
      noise(index,:) = v_sn.*((a_t*b_t*q_std*randn(1,NN) + a_t*b_t*q_std*randn(1,NN) .* (Ksi*(X(9,:,n-tau/h))))); % state dependent noise
